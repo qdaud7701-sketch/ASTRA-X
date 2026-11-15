@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ASTRA-X: Astronaut Mission Trainer</title>
+<style>
+:root{--pn:rgba(10,16,40,.86);--tx:#eef1ff;--mu:#9aa6d6;--ac:#ffb703;--bd:#3a4780;box-sizing:border-box}
+@media (prefers-color-scheme:light){:root{--pn:rgba(255,255,255,.92);--tx:#12183a;--mu:#55608f;--ac:#c26a00;--bd:#b9c3f0}}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#2a1510;font-family:system-ui,sans-serif;color:var(--tx);touch-action:none}
+#g,#g canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.pn{background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;position:fixed}
+#h{top:calc(8px + env(safe-area-inset-top,0px));left:8px;font-size:12px;display:grid;grid-template-columns:auto 80px;gap:3px 8px}
+.b{height:8px;margin-top:4px;background:var(--bd);border-radius:9px;overflow:hidden}.b i{display:block;height:100%}
+#ob{top:calc(8px + env(safe-area-inset-top,0px));right:8px;font-size:12px;max-width:46vw}
+#tt{top:60px;left:50%;transform:translateX(-50%);font-size:13px;display:none;max-width:80vw;text-align:center}
+#ar{position:fixed;top:140px;right:30px;font-size:34px;color:var(--ac);display:none}
+#ov{inset:0;background:rgba(5,8,25,.7);border:0;border-radius:0;display:flex;align-items:center;justify-content:center;z-index:9}
+#ob2{background:var(--pn);border:1px solid var(--bd);border-radius:14px;padding:18px;max-width:480px;width:92vw;max-height:88vh;overflow:auto}
+#ob2 h2{margin:.1em 0 .4em}#ob2 p{margin:.45em 0;font-size:14px}.mu{color:var(--mu)}
+button{font:inherit;color:var(--tx);background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:9px 12px;margin:3px 3px 0 0;cursor:pointer}
+button:disabled{opacity:.4}.p{background:var(--ac);color:#111;font-weight:700;border-color:var(--ac)}
+#ac{position:fixed;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(2,auto);gap:6px}
+#ac button{margin:0;padding:10px 12px;touch-action:none}
+#js{position:fixed;left:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:110px;height:110px;border-radius:50%;border:2px solid var(--bd);background:var(--pn);touch-action:none}
+#kn{position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:var(--ac);opacity:.8}
+#hp{position:fixed;left:140px;bottom:14px;font-size:12px;color:#fff;text-shadow:0 1px 3px #000}
+body{font-family:"Rajdhani",system-ui,sans-serif;font-size:15px}
+.pn{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.06)}
+#h{grid-template-columns:auto 96px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;gap:5px 10px;align-items:center;border-left:3px solid var(--ac)}
+.b{height:9px;margin:0;border-radius:6px;background:rgba(255,255,255,.14)}.b i{border-radius:6px;transition:width .2s}
+.lw{animation:pl .7s infinite alternate}@keyframes pl{to{opacity:.35}}
+#ob{border-right:3px solid var(--ac);font-size:13px;line-height:1.5}
+#tt{border:1px solid var(--ac);font-weight:700;font-size:15px;animation:ti .25s}@keyframes ti{from{opacity:0;transform:translate(-50%,-8px)}}
+#vg{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);box-shadow:inset 0 0 120px rgba(255,160,80,.08)}
+#mm{position:fixed;top:calc(172px + env(safe-area-inset-top,0px));left:8px;width:120px;height:120px;border-radius:50%;border:2px solid var(--ac);box-shadow:0 0 18px rgba(255,183,3,.35)}
+@media(max-width:600px){#mm{width:90px;height:90px}}
+button{transition:transform .1s,border-color .15s;font-weight:700;font-family:inherit}button:hover:not(:disabled){border-color:var(--ac);transform:translateY(-1px)}
+.p{background:linear-gradient(135deg,#ffcb47,#ff8a1f);box-shadow:0 4px 16px rgba(255,138,31,.4)}
+#ac button{border-radius:12px;font-size:13px;backdrop-filter:blur(8px)}
+#js{box-shadow:0 0 20px rgba(0,0,0,.4)}#kn{box-shadow:0 0 14px var(--ac)}
+#ob2{box-shadow:0 20px 60px rgba(0,0,0,.6);border-top:3px solid var(--ac);backdrop-filter:blur(10px)}
+.ttl{font-size:46px!important;letter-spacing:.18em;margin:.05em 0!important;background:linear-gradient(90deg,#ffcb47,#ff6a3d);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap"></head><body>
+<div id="g"></div><div id="vg"></div><canvas id="mm" width="120" height="120"></canvas><div id="h" class="pn"></div><div id="ob" class="pn"></div><div id="tt" class="pn"></div><div id="ar">↑</div>
+<div id="js"><div id="kn"></div></div><div id="hp">WASD move · Shift run · Space jump · drag to look</div>
+<div id="ac"><button data-a="j">⤴ Jump</button><button data-a="s">🏃 Run</button><button data-a="r">🚙 Rover (R)</button><button data-a="c">🛠 Craft (C)</button><button data-a="q">📡 Scan (Q)</button><button data-a="k">📚 Library (K)</button></div>
+<div id="ov" class="pn"><div id="ob2"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const T=THREE,R=Math.random,$=id=>document.getElementById(id),PI=Math.PI;
+const KB={
+fuel:["Rocket Fuel Cell","Fuel and an oxidizer react and expand fast; the exhaust pushes the rocket the other way (Newton’s 3rd law).","Space has no air, so rockets carry both fuel and oxygen.","NASA’s Mars landers carry fuel for the final descent burn."],
+iron:["Iron Ore","Metals conduct heat and carry loads. Iron is strong and can be melted and shaped.","Building with local materials (ISRU) saves launching heavy cargo from Earth.","NASA studies Mars regolith as a source for building and oxygen."],
+ice:["Water Ice","Electricity can split water (H₂O) into hydrogen and oxygen (electrolysis).","Water means drinking water, breathable oxygen and fuel.","Radar on Mars orbiters has found ice beneath the surface."],
+circuit:["Circuits & Electronics","Circuit boards route electricity through chips, sensors and motors.","Rovers and suits depend on electronics for control and communication.","Perseverance carries many computers, cameras and sensors."],
+o2:["Oxygen Cylinder","Oxygen is compressed into a tank; a regulator lowers the pressure so you can breathe it safely.","Mars air is mostly CO₂ and far too thin for humans.","The MOXIE experiment on Perseverance made oxygen from Mars CO₂."],
+rover:["Planetary Rover","Electric motors turn six wheels. A rocker-bogie suspension keeps wheels on rough ground.","Rovers explore dangerous terrain so humans do not have to.","Curiosity and Perseverance drive on 6 wheels and carry robotic arms."],
+solar:["Solar Charger","Photovoltaic cells turn sunlight into electricity, which charges batteries.","Solar power is clean and reliable far from Earth.","Dust storms can cut solar power sharply; Opportunity’s mission ended after a global storm."],
+signal:["Mysterious Signal","Radio waves travel at light speed. Antennas send and receive them.","Distance delays signals: Earth to Mars takes about 3 to 22 minutes one way.","NASA’s Deep Space Network antennas talk to every far-away spacecraft."],
+storm:["Dust Storm","Winds lift fine dust high into thin air, blocking sunlight.","Low visibility and weak solar charging make navigation harder.","Martian dust storms can cover the whole planet for weeks."],
+meteor:["Meteorite Impact","Space rocks hit with huge speed. Mars has little air to slow them.","Habitats need shelter and warning systems.","NASA’s InSight lander detected meteorite impacts on Mars."]};
+const known={};let kp=0,paused=true,suit=0xe8e8f0,faceTex=null;
+const sc=new T.Scene(),cam=new T.PerspectiveCamera(65,1,.1,700),rd=new T.WebGLRenderer({antialias:true});
+rd.setPixelRatio(Math.min(devicePixelRatio,2));rd.shadowMap.enabled=true;rd.shadowMap.type=T.PCFSoftShadowMap;$("g").appendChild(rd.domElement);
+function rs(){rd.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}addEventListener("resize",rs);rs();
+sc.add(new T.HemisphereLight(0xffd9b8,0x6a3a28,.7));const sun=new T.DirectionalLight(0xffeedd,1.05);sun.position.set(60,90,30);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);const sh=sun.shadow.camera;sh.left=sh.bottom=-45;sh.right=sh.top=45;sh.near=1;sh.far=300;sun.shadow.bias=-.0006;sc.add(sun,sun.target);
+const SKY=new T.Color(0xc9825a);sc.background=SKY.clone();sc.fog=new T.FogExp2(0xc9825a,.006);
+const CR=[[60,40,16],[-70,-50,20],[90,-80,18],[-40,90,14],[20,-110,22]];
+function H(x,z){let h=Math.sin(x*.045)*3+Math.cos(z*.05)*3+Math.sin((x+z)*.12)*1.1;h*=Math.min(1,Math.hypot(x,z)/25);for(const c of CR){const d=Math.hypot(x-c[0],z-c[1]);if(d<c[2])h-=5*(1-(d/c[2])**2)}return h}
+const tg=new T.PlaneGeometry(500,500,120,120);tg.rotateX(-PI/2);const pa=tg.attributes.position,col=[];
+for(let i=0;i<pa.count;i++){pa.setY(i,H(pa.getX(i),pa.getZ(i)))}tg.computeVertexNormals();const nm=tg.attributes.normal;for(let i=0;i<pa.count;i++){const x=pa.getX(i),z=pa.getZ(i),h=pa.getY(i),sl=1-nm.getY(i),n=Math.sin(x*.21+Math.sin(z*.17)*2)*.05+R()*.05,s=Math.max(.35,.85+h*.035-sl*1.6+n);col.push(.72*s+.14,.4*s+.08,.28*s+.07)}
+tg.setAttribute("color",new T.Float32BufferAttribute(col,3));const cv=document.createElement("canvas");cv.width=cv.height=256;const cx2=cv.getContext("2d");cx2.fillStyle="#c9967a";cx2.fillRect(0,0,256,256);for(let i=0;i<4000;i++){const v=150+R()*100|0;cx2.fillStyle=`rgba(${v},${v*.72|0},${v*.55|0},.4)`;const q=1+R()*3;cx2.fillRect(R()*256,R()*256,q,q)}const gt=new T.CanvasTexture(cv);gt.wrapS=gt.wrapT=T.RepeatWrapping;gt.repeat.set(90,90);gt.anisotropy=4;
+const ter=new T.Mesh(tg,new T.MeshStandardMaterial({vertexColors:true,map:gt,roughness:1,metalness:0}));ter.receiveShadow=true;sc.add(ter);
+const rocks=[];for(let i=0;i<90;i++){const x=(R()-.5)*440,z=(R()-.5)*440;if(Math.hypot(x,z)<18)continue;const r=.6+R()*(i<35?2.6:.8);
+const gg=new T.IcosahedronGeometry(r,1),pp=gg.attributes.position;for(let q=0;q<pp.count;q++){const X=pp.getX(q),Y=pp.getY(q),Z=pp.getZ(q),f=1+Math.sin(X*7+Y*5+Z*3)*.2;pp.setXYZ(q,X*f,Y*f*.75,Z*f)}gg.computeVertexNormals();const m=new T.Mesh(gg,new T.MeshStandardMaterial({color:new T.Color().setHSL(.04+R()*.03,.35,.2+R()*.13),roughness:1,flatShading:true}));m.castShadow=m.receiveShadow=true;m.position.set(x,H(x,z)+r*.3,z);m.rotation.y=R()*6;sc.add(m);if(r>1.4)rocks.push({x,z,r:r*.9})}
+const mat=(c,e)=>new T.MeshLambertMaterial({color:c,emissive:e||0,flatShading:true});
+function add(g,m,x,y,z,p){const o=new T.Mesh(g,m);o.position.set(x,y,z);p.add(o);return o}
+// lander
+const LD=new T.Group();add(new T.CylinderGeometry(1.3,2.4,4,8),mat(0xcfd4dc),0,3,0,LD);[[2,0],[-2,0],[0,2],[0,-2]].forEach(a=>add(new T.CylinderGeometry(.1,.1,3),mat(0x888),a[0]*1.1,1.2,a[1]*1.1,LD));LD.position.set(0,H(0,0),0);sc.add(LD);
+// beacon
+const BX=-110,BZ=80,BC=new T.Mesh(new T.CylinderGeometry(.4,.4,25),new T.MeshBasicMaterial({color:0x66ccff,transparent:true,opacity:.6}));BC.position.set(BX,H(BX,BZ)+12,BZ);sc.add(BC);
+// rover
+const RV=new T.Group(),rm=mat(0x8a8f99),IND=mat(0xff3030,0xff2020);
+add(new T.BoxGeometry(2.4,.6,3.6),rm,0,1,0,RV);add(new T.BoxGeometry(1.4,.5,1.2),mat(0x333b55),0,1.55,.8,RV);
+for(const x of[-1.4,1.4])for(const z of[-1.3,0,1.3]){const w=add(new T.CylinderGeometry(.5,.5,.35,12),mat(0x222),x,.5,z,RV);w.rotation.z=PI/2}
+const sp=add(new T.BoxGeometry(2.2,.06,1.4),mat(0x1a3a8f),0,1.5,-.9,RV);sp.rotation.x=-.25;add(new T.CylinderGeometry(.05,.05,1.6),rm,.8,1.9,-1.2,RV);add(new T.SphereGeometry(.18),IND,0,1.9,1.5,RV);
+const RVX=32,RVZ=-24;RV.position.set(RVX,H(RVX,RVZ),RVZ);sc.add(RV);const rover={fixed:0,h:0,v:0};
+// items
+const IT={fuel:[0xff8a1f,()=>new T.CylinderGeometry(.35,.35,1,10)],iron:[0x8a8f99,()=>new T.DodecahedronGeometry(.5)],ice:[0x9fe7ff,()=>new T.OctahedronGeometry(.55)],scrap:[0x555a66,()=>new T.BoxGeometry(.8,.4,.6)],circuit:[0x2ec27e,()=>new T.BoxGeometry(.6,.1,.6)],o2:[0x3b82f6,()=>new T.CylinderGeometry(.25,.25,1.2,10)],food:[0xffd23f,()=>new T.BoxGeometry(.6,.4,.6)]};
+const items=[];function spawn(k,n){for(let i=0;i<n;i++){let x,z,t=0;do{const a=R()*PI*2,d=30+R()*170;x=Math.cos(a)*d;z=Math.sin(a)*d}while(CR.some(c=>Math.hypot(x-c[0],z-c[1])<c[2]*.9)&&t++<30);
+const m=new T.Mesh(IT[k][1](),mat(IT[k][0],IT[k][0]&0x222222));m.position.set(x,H(x,z)+1,z);sc.add(m);let b=null;if(k=="fuel"){b=new T.Mesh(new T.CylinderGeometry(.12,.12,40),new T.MeshBasicMaterial({color:0xff8a1f,transparent:true,opacity:.5}));b.position.set(x,H(x,z)+20,z);b.visible=false;sc.add(b)}items.push({k,m,b,x,z,on:1})}}
+spawn("fuel",3);spawn("iron",14);spawn("ice",10);spawn("scrap",8);spawn("circuit",6);spawn("o2",4);spawn("food",5);
+// player
+const P=new T.Group(),p={x:6,z:6,y:0,vy:0};let faceM;
+function buildP(){const s=mat(suit);add(new T.CylinderGeometry(.42,.48,1.1,12),s,0,1.05,0,P);add(new T.SphereGeometry(.4,14,14),s,0,1.85,0,P);
+add(new T.SphereGeometry(.3,12,12),new T.MeshLambertMaterial({color:0x1b2440}),0,1.85,.22,P).scale.z=.7;add(new T.BoxGeometry(.6,.8,.3),mat(0xb9bdc9),0,1.1,-.45,P);
+add(new T.CylinderGeometry(.14,.14,.7),s,-.18,.35,0,P);add(new T.CylinderGeometry(.14,.14,.7),s,.18,.35,0,P);
+faceM=add(new T.CircleGeometry(.2,20),new T.MeshBasicMaterial({map:faceTex}),0,1.86,.46,P);faceM.visible=!!faceTex;sc.add(P)}
+// state
+const inv={iron:0,ice:0,scrap:0,circuit:0,fuel:0};let hp=100,o2=100,food=100,bat=100,yaw=0,pitch=.35,inR=0,storm=0,stT=40,mT=8,scanT=0,run=0,jump=0,sigDone=0,toastT=0,hudT=0,jx=0,jy=0,met=[],won=0,clock=0;
+const keys={};
+function toast(s,t){const e=$("tt");e.textContent=s;e.style.display="block";toastT=t||3}
+function ov(h){$("ob2").innerHTML=h;$("ov").style.display="flex";paused=true}function hide(){$("ov").style.display="none";paused=false}
+function learn(k){if(known[k])return;known[k]=1;kp+=10;showK(k,1)}
+function showK(k,fresh){const e=KB[k];ov(`<h2>${fresh?"🔓 New knowledge: ":""}${e[0]}</h2><p><b>How it works:</b> ${e[1]}</p><p><b>Why in space:</b> ${e[2]}</p><p><b>NASA link:</b> ${e[3]}</p><p class="mu">Simplified for gameplay. ${fresh?"+10 knowledge points.":""}</p><button class="p" onclick="hide()">Continue</button>${fresh?"":'<button onclick="lib()">Back</button>'}`)}
+function lib(){const ks=Object.keys(known);ov(`<h2>📚 Knowledge Database</h2><p class="mu">Knowledge points: ${kp}</p>${ks.length?ks.map(k=>`<button onclick="showK('${k}')">${KB[k][0]}</button>`).join(""):"<p>Discover items to unlock entries.</p>"}<p><button class="p" onclick="hide()">Close</button></p>`)}
+const RC=[["Repair Rover",{scrap:2,circuit:1,iron:1},()=>{if(rover.fixed)return 0;rover.fixed=1;IND.color.set(0x2ec27e);IND.emissive.set(0x1a8a55);learn("rover");toast("Rover repaired! Stand near it and press R.");return 1}],
+["Oxygen Generator (+100 O₂)",{ice:2,iron:1},()=>{o2=100;toast("Oxygen restored by electrolysis!");return 1}],["Medical Kit (+50 health)",{scrap:1,ice:1},()=>{hp=Math.min(100,hp+50);return 1}],["Solar Charger (+60 battery)",{circuit:1,iron:1},()=>{bat=Math.min(100,bat+60);learn("solar");return 1}]];
+function craft(){ov(`<h2>🛠 Crafting</h2><p class="mu">Iron ${inv.iron} · Ice ${inv.ice} · Scrap ${inv.scrap} · Circuits ${inv.circuit} · Fuel ${inv.fuel}</p>`+RC.map((r,i)=>{const ok=Object.keys(r[1]).every(k=>inv[k]>=r[1][k])&&!(i==0&&rover.fixed);return `<p><button ${ok?"":"disabled"} onclick="mk(${i})">${r[0]}</button><br><span class="mu">Needs: ${Object.entries(r[1]).map(a=>a[1]+" "+a[0]).join(", ")}</span></p>`}).join("")+`<button class="p" onclick="hide()">Close</button>`)}
+function mk(i){const r=RC[i];if(!Object.keys(r[1]).every(k=>inv[k]>=r[1][k]))return;for(const k in r[1])inv[k]-=r[1][k];r[2]();hide()}
+function act(a){if(paused)return;if(a=="j")jump=1;if(a=="s")run=!run;if(a=="c")craft();if(a=="k")lib();if(a=="q"&&bat>=3){bat-=3;scanT=8;toast("Scanner pulse: fuel beams revealed")}
+if(a=="r"){if(inR){inR=0;P.visible=true;p.x=RV.position.x+3;p.z=RV.position.z}else if(Math.hypot(p.x-RV.position.x,p.z-RV.position.z)<6){if(rover.fixed){inR=1;P.visible=false}else toast("Rover is damaged. Craft Repair Rover (C).")}else toast("Move closer to the rover.")}}
+addEventListener("keydown",e=>{const k=e.key.length>1?e.key:e.key.toLowerCase();keys[k]=1;if(k==" "){jump=1;e.preventDefault()}if(k=="r")act("r");if(k=="c")act("c");if(k=="k")act("k");if(k=="q")act("q")});
+addEventListener("keyup",e=>{keys[e.key.length>1?e.key:e.key.toLowerCase()]=0});
+document.querySelectorAll("#ac button").forEach(b=>b.onpointerdown=e=>{e.preventDefault();act(b.dataset.a)});
+rd.domElement.addEventListener("pointermove",e=>{if(e.buttons&&!paused){yaw-=e.movementX*.005;pitch=Math.max(-.1,Math.min(1.1,pitch+e.movementY*.004))}});
+let lx,ly;rd.domElement.addEventListener("touchstart",e=>{lx=e.touches[0].clientX;ly=e.touches[0].clientY},{passive:true});
+rd.domElement.addEventListener("touchmove",e=>{const t=e.touches[0];if(!paused){yaw-=(t.clientX-lx)*.006;pitch=Math.max(-.1,Math.min(1.1,pitch+(t.clientY-ly)*.005))}lx=t.clientX;ly=t.clientY},{passive:true});
+const js=$("js"),kn=$("kn");function jm(e){const r=js.getBoundingClientRect();let dx=(e.clientX-r.left-55)/45,dy=(e.clientY-r.top-55)/45;const m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m}jx=dx;jy=dy;kn.style.transform=`translate(${dx*35}px,${dy*35}px)`}
+js.onpointerdown=e=>{js.setPointerCapture(e.pointerId);jm(e)};js.onpointermove=e=>{if(e.buttons)jm(e)};js.onpointerup=()=>{jx=jy=0;kn.style.transform=""};
+function die(m){ov(`<h2>Mission failed</h2><p>${m}</p><button class="p" onclick="hp=o2=food=bat=100;p.x=6;p.z=6;inR=0;P.visible=true;hide()">Respawn at lander</button>`)}
+function objs(){const O=[["Collect 3 fuel cells ("+inv.fuel+"/3)",inv.fuel>=3],["Repair the rover",rover.fixed],["Investigate the signal (west-north beacon)",sigDone],["Return to the lander with the fuel",won]];$("ob").innerHTML="<b>🎯 Mission 1: Survive Mars</b><br>"+O.map(o=>(o[1]?"✅ ":"⬜ ")+o[0]).join("<br>")+`<br><span class="mu">🧠 ${kp} knowledge pts</span>`}
+function hud(){const b=(l,v,c)=>`<span>${l}</span><div class="b ${v<25?"lw":""}"><i style="width:${Math.max(0,v)}%;background:linear-gradient(90deg,${c}88,${c});box-shadow:0 0 8px ${c}"></i></div>`;$("h").innerHTML=b("❤ Health",hp,"#ff5c6c")+b("💨 Oxygen",o2,"#5cc8ff")+b("🥫 Food",food,"#ffb703")+b("🔋 Battery",bat,"#7dff9a")+`<span>🌡 Temp</span><span>${-63+Math.round(Math.sin(clock*.05)*8)} °C${storm?" 🌪":""}</span>`;objs()}
+function ang(a,b){const d=Math.atan2(Math.sin(a-b),Math.cos(a-b));return d}
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-(loop.l||now))/1000);loop.l=now;
+ if(!paused){clock+=dt;step(dt);anim(dt)}
+ const tg=inR?RV.position:P.position;sun.position.set(tg.x+60,tg.y+90,tg.z+30);sun.target.position.copy(tg);sun.target.updateMatrixWorld();drawMM(tg.x,tg.z);const d=7+(inR?3:0),cx=tg.x+Math.sin(yaw)*Math.cos(pitch)*d,cz=tg.z+Math.cos(yaw)*Math.cos(pitch)*d;let cy=tg.y+2+Math.sin(pitch)*d;cy=Math.max(cy,H(cx,cz)+1);
+ cam.position.lerp(new T.Vector3(cx,cy,cz),1-Math.exp(-dt*12));cam.lookAt(tg.x,tg.y+1.6,tg.z);sky.position.copy(cam.position);sunS.position.copy(cam.position).addScaledVector(sunDir,520);rd.render(sc,cam)}
+function step(dt){const fz=(keys.w||keys.ArrowUp?1:0)-(keys.s||keys.ArrowDown?1:0)-jy,fx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0)+jx,m=Math.hypot(fx,fz),rn=run||keys.Shift;
+ let px=inR?RV.position.x:p.x,pz=inR?RV.position.z:p.z;
+ if(inR){rover.v=Math.max(-6,Math.min(16,rover.v+fz*22*dt));rover.v*=Math.exp(-1.2*dt);rover.h-=fx*1.8*dt*(rover.v>=0?1:-1)*Math.min(1,Math.abs(rover.v)/4);px+=Math.sin(rover.h)*rover.v*dt;pz+=Math.cos(rover.h)*rover.v*dt}
+ else{if(m>.05){const k=Math.min(1,m),sp=(rn?11:6)*k*(storm?.8:1),dx=(-Math.sin(yaw)*fz+Math.cos(yaw)*fx)/m,dz=(-Math.cos(yaw)*fz-Math.sin(yaw)*fx)/m;px+=dx*sp*dt;pz+=dz*sp*dt;P.rotation.y+=ang(Math.atan2(dx,dz),P.rotation.y)*Math.min(1,dt*12)}}
+ for(const r of rocks){const dd=Math.hypot(px-r.x,pz-r.z),mn=r.r+(inR?1.8:.5);if(dd<mn){px=r.x+(px-r.x)/dd*mn;pz=r.z+(pz-r.z)/dd*mn;if(inR)rover.v*=.5}}
+ px=Math.max(-235,Math.min(235,px));pz=Math.max(-235,Math.min(235,pz));
+ if(inR){RV.position.set(px,H(px,pz),pz);RV.rotation.y=rover.h;p.x=px;p.z=pz;bat-=dt*.4}
+ else{p.x=px;p.z=pz;p.vy-=14*dt;p.y+=p.vy*dt;const g=H(px,pz);let on=false;if(p.y<=g){p.y=g;p.vy=0;on=true}if(jump&&on)p.vy=8;jump=0;P.position.set(px,p.y,pz)}
+ if(!inR)jump=0;
+ // items
+ for(const it of items){if(!it.on)continue;it.m.rotation.y+=dt*1.5;it.m.position.y=H(it.x,it.z)+1+Math.sin(clock*2+it.x)*.15;if(it.b)it.b.visible=scanT>0;
+  if(Math.hypot(px-it.x,pz-it.z)<(inR?4:2.4)){it.on=0;sc.remove(it.m);if(it.b)sc.remove(it.b);const k=it.k;
+   if(k=="o2"){o2=Math.min(100,o2+40);toast("+40 oxygen")}else if(k=="food"){food=Math.min(100,food+40);toast("+40 food")}else{inv[k]++;toast("Collected "+k)}
+   learn(k=="scrap"?"circuit":k=="food"?"o2":k)}}
+ if(!sigDone&&Math.hypot(px-BX,pz-BZ)<7){sigDone=1;learn("signal");toast("Signal source found!")}
+ // lander
+ if(Math.hypot(px,pz)<9){o2=Math.min(100,o2+25*dt);bat=Math.min(100,bat+15*dt);food=Math.min(100,food+5*dt);if(!won&&inv.fuel>=3&&rover.fixed&&sigDone){won=1;ov(`<h2>🏆 MISSION COMPLETE</h2><p>You refueled the lander, repaired the rover and traced the mysterious signal. Rank: <b>SPACE MISSION COMMANDER</b></p><p>Knowledge points: ${kp}</p><button class="p" onclick="hide()">Keep exploring</button>`)}else if(!won&&inv.fuel>=3)toast("Refueling… finish the other objectives!")}
+ // survival
+ o2-=dt*(.45+(rn&&!inR?.4:0))*(storm?1.3:1);food-=dt*.12;bat-=dt*(storm?.15:.05);scanT=Math.max(0,scanT-dt);
+ if(o2<=0){o2=0;hp-=dt*6}if(food<=0){food=0;hp-=dt*1.5}if(bat<=0){bat=0}if(hp<=0){hp=0;die(o2<=0?"You ran out of oxygen.":"You were too badly hurt.")}
+ // hazards
+ stT-=dt;if(stT<=0){storm=!storm;stT=storm?20:50+R()*30;if(storm){learn("storm");toast("🌪 Dust storm! Low visibility, weak solar power")}}
+ const fg=sc.fog;skyU.s.value+=((storm?1:0)-skyU.s.value)*dt;fg.density+=((storm?.025:.006)-fg.density)*dt;sc.background.lerp(storm?new T.Color(0x7a4a36):SKY,dt);fg.color.copy(sc.background);
+ mT-=dt;if(mT<=0){mT=9+R()*8;const a=R()*PI*2,d=R()*18,x=px+Math.cos(a)*d,z=pz+Math.sin(a)*d;const r=new T.Mesh(new T.RingGeometry(3.5,4.2,24),new T.MeshBasicMaterial({color:0xff3030,side:2}));r.rotation.x=-PI/2;r.position.set(x,H(x,z)+.2,z);const b=new T.Mesh(new T.SphereGeometry(.8),new T.MeshBasicMaterial({color:0xffaa33}));sc.add(r,b);met.push({x,z,t:2.5,r,b});learn("meteor");toast("☄ Meteor incoming! Run from the red ring")}
+ for(const q of met){q.t-=dt;q.b.position.set(q.x,H(q.x,q.z)+Math.max(0,q.t)*24,q.z);if(q.t<=0&&!q.d){q.d=1;sc.remove(q.b);if(Math.hypot(px-q.x,pz-q.z)<5){hp-=30;toast("Meteor impact! −30 health")}setTimeout(()=>sc.remove(q.r),600)}}
+ met=met.filter(q=>!q.d||q.t>-1);
+ // scanner arrow
+ const ar=$("ar"),f=items.filter(i=>i.k=="fuel"&&i.on).sort((a,b)=>Math.hypot(a.x-px,a.z-pz)-Math.hypot(b.x-px,b.z-pz))[0];
+ if(scanT>0&&f){const tx=f.x-px,tz=f.z-pz,fx2=-Math.sin(yaw),fz2=-Math.cos(yaw),rx=Math.cos(yaw),rz=-Math.sin(yaw);ar.style.display="block";ar.style.transform=`rotate(${Math.atan2(tx*rx+tz*rz,tx*fx2+tz*fz2)}rad)`;ar.title=Math.round(Math.hypot(tx,tz))+" m"}else ar.style.display="none";
+ toastT-=dt;if(toastT<=0)$("tt").style.display="none";hudT-=dt;if(hudT<=0){hudT=.15;hud()}}
+// start
+const sunDir=new T.Vector3(60,90,30).normalize(),skyU={hor:{value:sc.background},zen:{value:new T.Color(0x4a3f58)},s:{value:0}};
+const sky=new T.Mesh(new T.SphereGeometry(600,24,16),new T.ShaderMaterial({uniforms:skyU,side:T.BackSide,depthWrite:false,fog:false,vertexShader:"varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",fragmentShader:"uniform vec3 hor,zen;uniform float s;varying vec3 vP;void main(){float h=clamp(normalize(vP).y,0.,1.);gl_FragColor=vec4(mix(hor,mix(zen,hor,s),pow(h,.5)),1.);}"}));sky.renderOrder=-1;sc.add(sky);
+const sg=document.createElement("canvas");sg.width=sg.height=128;const sx=sg.getContext("2d"),gr=sx.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,"rgba(255,245,220,1)");gr.addColorStop(.15,"rgba(255,220,160,.8)");gr.addColorStop(1,"rgba(255,160,80,0)");sx.fillStyle=gr;sx.fillRect(0,0,128,128);
+const sunS=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(sg),blending:T.AdditiveBlending,depthWrite:false,fog:false}));sunS.scale.set(180,180,1);sc.add(sunS);
+const dN=500,dP=new Float32Array(dN*3);for(let i=0;i<dN;i++){dP[i*3]=(R()-.5)*80;dP[i*3+1]=-2+R()*14;dP[i*3+2]=(R()-.5)*80}const dg=new T.BufferGeometry();dg.setAttribute("position",new T.BufferAttribute(dP,3));
+const dust=new T.Points(dg,new T.PointsMaterial({color:0xe0a070,size:.18,transparent:true,opacity:.3,depthWrite:false}));dust.frustumCulled=false;sc.add(dust);
+[RV,LD].forEach(g=>g.traverse(o=>{if(o.isMesh)o.castShadow=true}));
+const PL={};function buildP2(){const s=new T.MeshStandardMaterial({color:suit,roughness:.55,metalness:.1}),dk=new T.MeshStandardMaterial({color:0x3a3f4d,roughness:.7}),gl=new T.MeshStandardMaterial({color:0x0e1530,roughness:.12,metalness:.9}),ac=new T.MeshStandardMaterial({color:0xff8a1f,roughness:.6}),wh=new T.MeshStandardMaterial({color:0xdfe3ee,roughness:.3,metalness:.5});
+ const bd=new T.Group();P.add(bd);PL.t=bd;add(new T.CylinderGeometry(.4,.46,.95,16),s,0,1.15,0,bd);add(new T.BoxGeometry(.34,.26,.1),dk,0,1.3,.42,bd);add(new T.BoxGeometry(.06,.06,.03),new T.MeshStandardMaterial({color:0x2ec27e,emissive:0x2ec27e}),.08,1.32,.48,bd);
+ add(new T.SphereGeometry(.38,20,16),s,0,1.85,0,bd);add(new T.CylinderGeometry(.34,.4,.12,16),dk,0,1.58,0,bd);add(new T.SphereGeometry(.31,20,16),gl,0,1.86,.2,bd).scale.set(1,1.05,.8);
+ add(new T.BoxGeometry(.62,.8,.32),dk,0,1.2,-.5,bd);for(const x of[-.18,.18])add(new T.CylinderGeometry(.13,.13,.7,12),wh,x,1.2,-.74,bd);
+ const lm=(x,y,l,m,e)=>{const g=new T.Group();g.position.set(x,y,0);add(new T.CylinderGeometry(.14,.12,l,10),m,0,-l/2,0,g);add(e,ac===e?ac:dk,0,-l-.02,.04,g);return g};
+ PL.la=new T.Group();PL.la.position.set(-.52,1.5,0);add(new T.CylinderGeometry(.12,.11,.6,10),s,0,-.3,0,PL.la);add(new T.SphereGeometry(.13,10,10),ac,0,-.66,0,PL.la);bd.add(PL.la);
+ PL.ra=new T.Group();PL.ra.position.set(.52,1.5,0);add(new T.CylinderGeometry(.12,.11,.6,10),s,0,-.3,0,PL.ra);add(new T.SphereGeometry(.13,10,10),ac,0,-.66,0,PL.ra);bd.add(PL.ra);
+ for(const [k,x] of[["ll",-.2],["rl",.2]]){const g=new T.Group();g.position.set(x,.9,0);add(new T.CylinderGeometry(.16,.14,.75,12),s,0,-.38,0,g);add(new T.BoxGeometry(.28,.2,.4),dk,0,-.8,.06,g);P.add(g);PL[k]=g}
+ faceM=add(new T.CircleGeometry(.2,20),new T.MeshBasicMaterial({map:faceTex}),0,1.86,.47,bd);faceM.visible=!!faceTex;P.traverse(o=>{if(o.isMesh)o.castShadow=true});sc.add(P)}
+let pl={x:0,z:0},ph=0,sw=0;
+function anim(dt){const ex=inR?RV.position:P.position,v=Math.min(20,Math.hypot(P.position.x-pl.x,P.position.z-pl.z)/Math.max(dt,.001));pl.x=P.position.x;pl.z=P.position.z;sw+=(Math.min(1,v/6)-sw)*Math.min(1,dt*10);ph+=v*dt*1.6;
+ if(PL.ll){const w=Math.sin(ph);PL.ll.rotation.x=w*.7*sw;PL.rl.rotation.x=-w*.7*sw;PL.la.rotation.x=-w*.6*sw;PL.ra.rotation.x=w*.6*sw;PL.t.position.y=Math.abs(w)*.06*sw}
+ const a=dg.attributes.position.array,wd=storm?16:2.5;for(let i=0;i<dN;i++){let x=a[i*3]+dt*wd;if(x>40)x-=80;a[i*3]=x;a[i*3+1]+=Math.sin(clock*.7+i)*dt*.4}dg.attributes.position.needsUpdate=true;dust.position.copy(ex);dust.material.opacity=storm?.75:.3;dust.material.size=storm?.4:.18}
+const mm=$("mm").getContext("2d");
+function drawMM(px,pz){const c=mm;c.clearRect(0,0,120,120);c.save();c.beginPath();c.arc(60,60,58,0,PI*2);c.clip();c.fillStyle="rgba(14,20,40,.88)";c.fillRect(0,0,120,120);
+ const k=.9,fx=-Math.sin(yaw),fz=-Math.cos(yaw),rx=Math.cos(yaw),rz=-Math.sin(yaw);
+ const pt=(x,z,col,r,sq,nc)=>{const dx=x-px,dz=z-pz;let sx=(dx*rx+dz*rz)*k,sy=-(dx*fx+dz*fz)*k;const d=Math.hypot(sx,sy);if(d>54){if(nc&&d>54+r)return;if(!nc){sx*=54/d;sy*=54/d}}c.fillStyle=col;c.beginPath();if(sq)c.rect(60+sx-r,60+sy-r,r*2,r*2);else c.arc(60+sx,60+sy,r,0,PI*2);c.fill()};
+ for(const q of CR)pt(q[0],q[1],"rgba(255,255,255,.12)",q[2]*k*.8,0,1);pt(0,0,"#8ab4ff",4,1);pt(RV.position.x,RV.position.z,rover.fixed?"#2ec27e":"#ff5c6c",3,1);if(!sigDone)pt(BX,BZ,"#66ccff",3);
+ if(scanT>0)for(const it of items)if(it.k=="fuel"&&it.on)pt(it.x,it.z,"#ff8a1f",3);
+ c.restore();c.strokeStyle="rgba(255,255,255,.15)";c.beginPath();c.arc(60,60,30,0,PI*2);c.stroke();c.fillStyle="#ffb703";c.beginPath();c.moveTo(60,52);c.lineTo(65,66);c.lineTo(55,66);c.fill()}
+const cols=[["White",0xe8e8f0],["Orange",0xff8a1f],["Blue",0x4a8fff]];
+ov(`<div class="mu" style="letter-spacing:.3em;font-size:11px">NASA SPACE APPS 2026</div><h2 class="ttl">ASTRA-X</h2><div class="mu">Astronaut Mission Trainer</div><p>You are stranded on Mars. Find 3 fuel cells, craft tools, repair the rover, investigate the signal and return to your lander.</p>
+<p><b>Suit:</b> ${cols.map((c,i)=>`<button onclick="suit=${c[1]};this.style.outline='2px solid var(--ac)'">${c[0]}</button>`).join("")}</p>
+<p><b>Face on helmet (optional):</b> <input type="file" accept="image/*" id="fi"><br><span class="mu">Your photo is used only in your browser. It is never uploaded.</span></p>
+<button class="p" onclick="go()">Launch mission</button>`);
+function go(){const f=$("fi").files[0];const fin=()=>{buildP2();p.y=H(p.x,p.z);P.position.set(p.x,p.y,p.z);hide();hud();toast("Move with WASD, drag to look. Find the orange fuel cells!",5)};
+ if(f){const u=URL.createObjectURL(f);new T.TextureLoader().load(u,t=>{faceTex=t;fin()},undefined,fin)}else fin()}
+requestAnimationFrame(loop);
+</script></body></html>
