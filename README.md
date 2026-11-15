@@ -16,8 +16,4 @@ Open the live link: [add your GitHub Pages link here]
 ## Built with
 HTML, CSS, JavaScript and Three.js (WebGL). Terrain, rocks and textures are generated in code.
 
-## AI disclosure
-An AI assistant (Claude by Anthropic) helped write the code from ideas and requirements by the students and teacher.
 
-## Team
-[Add team name, school and members]
