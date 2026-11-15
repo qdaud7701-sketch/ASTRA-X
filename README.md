@@ -5,7 +5,7 @@ A browser-based 3D Mars survival game made for the NASA International Space Apps
 Explore Mars, find fuel cells, collect resources, craft tools, repair and drive a rover, and survive dust storms and meteors while managing oxygen, food, battery and health. Discovering items unlocks short knowledge files that explain the real science and NASA missions behind them.
 
 ## Play
-Open the live link: [add your GitHub Pages link here]
+Open the live link: https://qdaud7701-sketch.github.io/ASTRA-X/
 
 ## Controls
 - Move: W A S D / arrow keys (joystick on phones)
